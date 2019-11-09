@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>multi party</title>
+      <script src="http://localhost:3002/socket.io/socket.io.js"></script>
+      <script type="text/javascript" src="index.js"></script>
+  </head>
+  <body>
+    socket.io signaling for multi-party (trickle ICE)<br />
+    <button type="button" onclick="startVideo();">Start Video</button>
+    <button type="button" onclick="stopVideo();">Stop Video</button>
+    &nbsp;
+    <button type="button" onclick="connect();">Connect</button>
+    <button type="button" onclick="hangUp();">Hang Up</button>
+    <div>
+      <video
+        id="local_video"
+        autoplay
+        style="width: 160px; height: 120px; border: 1px solid black;"
+      ></video>
+    </div>
+    <div id="container"></div>
+    <!--
+<p>SDP to send:<br />
+  <textarea id="text_for_send_sdp" rows="5" cols="60" readonly="readonly">SDP to send</textarea>
+</p>
+<p>SDP received:&nbsp;
+  <button type="button" onclick="onSdpText();">Receive remote SDP</button>
+  <br />
+  <textarea id="text_for_receive_sdp" rows="5" cols="60"></textarea>
+</p>
+-->
+  </body>
+</html>
