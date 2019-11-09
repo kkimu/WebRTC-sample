@@ -1,36 +1,16 @@
 let localStream = null
 let peerConnection = null
 
-// --- prefix -----
-navigator.getUserMedia =
-  navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia ||
-  navigator.msGetUserMedia
-RTCPeerConnection =
-  window.RTCPeerConnection ||
-  window.webkitRTCPeerConnection ||
-  window.mozRTCPeerConnection
-RTCSessionDescription =
-  window.RTCSessionDescription ||
-  window.webkitRTCSessionDescription ||
-  window.mozRTCSessionDescription
-
-// ---------------------- media handling -----------------------
 // start local video
-function startVideo() {
-  getDeviceStream({ video: true, audio: false })
-    .then(function(stream) {
-      // success
-      localStream = stream
-      const localVideo = document.getElementById('local_video')
-      playVideo(localVideo, stream)
-    })
-    .catch(function(error) {
-      // error
-      console.error('getUserMedia error:', error)
-      return
-    })
+async function startVideo() {
+  const stream = await getDeviceStream({
+    video: true,
+    audio: false,
+  }).catch((err) => console.error('getUserMedia error:', error))
+
+  localStream = stream
+  const localVideo = document.getElementById('local_video')
+  playVideo(localVideo, stream)
 }
 
 // stop local video
@@ -53,19 +33,10 @@ function stopLocalStream(stream) {
 }
 
 function getDeviceStream(option) {
-  if ('getUserMedia' in navigator.mediaDevices) {
-    console.log('navigator.mediaDevices.getUserMadia')
-    return navigator.mediaDevices.getUserMedia(option)
-  } else {
-    console.log('wrap navigator.getUserMadia with Promise')
-    return new Promise(function(resolve, reject) {
-      navigator.getUserMedia(option, resolve, reject)
-    })
-  }
+  return navigator.mediaDevices.getUserMedia(option)
 }
 
 function playVideo(element, stream) {
-  console.log(element)
   if ('srcObject' in element) {
     element.srcObject = stream
   } else {
