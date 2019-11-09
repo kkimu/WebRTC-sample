@@ -10,7 +10,6 @@ wsServer.on('connection', ws => {
       if (ws === client) {
         console.log('skip render')
       } else {
-        console.log(message)
         client.send(message)
       }
     })
