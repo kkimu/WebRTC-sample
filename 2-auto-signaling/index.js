@@ -1,5 +1,34 @@
+'use strict'
+
 let localStream = null
 let peerConnection = null
+
+const wsUrl = 'ws://localhost:3001/'
+const ws = new WebSocket(wsUrl)
+ws.onopen = () => {
+  console.log('ws open')
+}
+ws.onerror = (err) => {
+  console.error('ws onerror ERR:', err)
+}
+
+ws.onmessage = (evt) => {
+  console.log('ws onmessage data:', evt.data)
+  const message = JSON.parse(evt.data)
+  const textToReceiveSdp = document.getElementById('text_for_receive_sdp')
+
+  if (message.type === 'offer') {
+    console.log('Received offer')
+    textToReceiveSdp.value = message.sdp
+    const offer = new RTCSessionDescription(message)
+    setOffer(offer)
+  } else if (message.type === 'answer') {
+    console.log('Received answer')
+    textToReceiveSdp.value = message.sdp
+    const answer = new RTCSessionDescription(message)
+    setAnswer(answer)
+  }
+}
 
 // start local video
 async function startVideo() {
@@ -84,8 +113,10 @@ function sendSdp(sessionDescription) {
   console.log('---sending sdp ---')
   const textForSendSdp = document.getElementById('text_for_send_sdp')
   textForSendSdp.value = sessionDescription.sdp
-  textForSendSdp.focus()
-  textForSendSdp.select()
+
+  const message = JSON.stringify(sessionDescription)
+  console.log('sending SDP=', message)
+  ws.send(message)
 }
 
 // ---------------------- connection handling -----------------------
